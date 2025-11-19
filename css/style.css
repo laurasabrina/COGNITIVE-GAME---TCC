@@ -1,0 +1,487 @@
+@font-face {
+    font-family: 'Intro Rust';
+    src: url('../fonts/IntroRust.otf') format('opentype'); /* ajuste o nome se precisar */
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.5s ease;
+    opacity: 1;
+}
+
+.bg-image.fade-out {
+    opacity: 0;
+}
+
+
+/* Estilo base do botão */
+.next-btn {
+    position: absolute;
+    padding: 15px 40px;
+    font-size: 26px;
+    font-family: 'Intro Rust', sans-serif;
+    background-color: #e88949; 
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Botão na parte inferior central */
+.next-btn.center {
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Botão na parte inferior direita */
+.next-btn.right {
+    bottom: 40px;
+    right: 40px;
+    transform: none;
+}
+
+.next-btn:hover {
+    background-color: #cf6e2c; /* tom mais escuro no hover */
+}
+
+/* Balões */
+.baloon {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    min-width: 50px;
+    max-width: 90%;
+    padding: 25px 40px;
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #333;
+    font-family: 'Intro Rust', sans-serif;
+    font-size: 24px;
+    border-radius: 20px;
+    border: 2px solid #e88949;
+    text-align: center;
+    display: none;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+    line-height: 1.6;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    transition: width 0.2s ease, height 0.2s ease;
+}
+
+
+/* ================== Jogo dos 7 erros ================== */
+.game7errors {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 80%;
+    display: none; /* começa escondido */
+    background-color: rgba(255, 255, 255, 0.85); /* fundo translúcido como balão */
+    border: 2px solid #e88949;
+    border-radius: 20px;
+    padding: 25px 40px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+    z-index: 10; /* acima do fundo, abaixo dos botões */
+    font-family: 'Intro Rust', sans-serif;
+}
+
+#canvas-main {
+  display: flex;
+  justify-content: center; /* centraliza horizontalmente */
+  align-items: center; /* centraliza verticalmente */
+  gap: 20px; /* espaço entre as duas imagens */
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#canvas-main img.game-image {
+  max-width: 80%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+
+/* Imagens lado a lado */
+.game-image {
+    width: 50.5%; /*aumenta a largura da imagem no canteiro branco*/
+    height: auto;
+}
+
+.game-image.left { float: left; }
+.game-image.right { float: right; }
+
+/* Cursor personalizado */
+.cursor {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e88949;
+    border-radius: 50%;
+    pointer-events: none;
+    display: none;
+}
+
+.cursor.visible {
+    display: block;
+}
+
+/* Marcadores */
+.marker {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border: 2px solid red;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.marker.accept {
+    border-color: green;
+}
+
+/* Texto no topo da área de jogo */
+.texto-topo {
+  text-align: center;
+  margin-bottom: 20px; /* controla o espaço entre o texto e as imagens */
+  color: #000;
+}
+
+.texto-topo h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.texto-topo p {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+
+/* ==============================
+   ESTILO DAS TELAS "SOBRE"
+   ============================== */
+
+/* Fundo escurecido que cobre toda a tela */
+.overlay {
+    display: none; /* começa escondido */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8); /* fundo escuro translúcido */
+    justify-content: center;
+    align-items: center;
+    z-index: 999; /* acima de tudo */
+}
+
+/* Imagem exibida no centro */
+.overlay-image {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 20px;
+    border: 4px solid #e88949;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* Botão de fechar (X) */
+.close-btn {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    font-size: 50px;
+    color: white;
+    cursor: pointer;
+    font-family: 'Intro Rust', sans-serif;
+    text-shadow: 2px 2px 8px #000;
+    transition: transform 0.2s ease;
+}
+
+.close-btn:hover {
+    transform: scale(1.2);
+    color: #e88949;
+}
+
+/* Botões do menu inicial */
+.menu-buttons {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.menu-btn {
+    padding: 15px 40px;
+    font-size: 26px;
+    font-family: 'Intro Rust', sans-serif;
+    background-color: #e88949;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.menu-btn:hover {
+    background-color: #cf6e2c;
+}
+
+/* ==============================
+   TELA DE ESCOLHA — CENTRALIZADA
+   ============================== */
+.tela-escolha {
+  position: fixed;              /* cobre toda a janela, não depende de elementos pai */
+  inset: 0;                     /* equivale a top:0; left:0; right:0; bottom:0 */
+  display: flex;
+  align-items: center;          /* centraliza verticalmente */
+  justify-content: center;      /* centraliza horizontalmente */
+  background: rgba(0, 0, 0, 0.45); /* fundo levemente escuro */
+  z-index: 900;                 /* acima do fundo e menu, abaixo do overlay */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.caixa-escolha {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px 40px;
+  border-radius: 20px;
+  width: 75%;
+  max-width: 800px;
+  text-align: center;
+  font-size: 1.3em;
+  font-family: 'Intro Rust', sans-serif;
+  color: #333;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.caixa-escolha p {
+  margin-bottom: 25px;
+}
+
+.botoes-escolha {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.botoes-escolha .next-btn {
+  position: static;             /* impede que o botão use posicionamento absoluto */
+  padding: 12px 32px;
+  font-size: 22px;
+  border-radius: 18px;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .caixa-escolha {
+    width: 90%;
+    padding: 20px;
+    font-size: 1em;
+  }
+}
+
+/* ============================
+   CORREÇÃO DEFINITIVA - TELA DE ESCOLHA
+   ============================ */
+.tela-escolha {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: none; /* <<< volta a começar escondida */
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 999999 !important;
+}
+
+.caixa-escolha {
+  background: rgba(255, 255, 255, 0.96);
+  padding: 35px 50px;
+  border-radius: 22px;
+  width: 80%;
+  max-width: 800px;
+  text-align: center;
+  font-size: 1.3em;
+  font-family: 'Intro Rust', sans-serif;
+  color: #333;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+}
+
+.botoes-escolha {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 25px;
+}
+
+.botoes-escolha .next-btn {
+  position: static;
+  padding: 12px 32px;
+  font-size: 22px;
+  border-radius: 18px;
+  background-color: #e88949;
+  color: #fff;
+  transition: background 0.3s ease;
+}
+
+.botoes-escolha .next-btn:hover {
+  background-color: #cf6e2c;
+}
+
+
+/* ========================== 
+   ESTILO DO CAÇA-PALAVRAS
+   ========================== */
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* necessário para o posicionamento do #progress */
+    width: 100%;
+}
+
+/* Título centralizado */
+.game-wrapper h1 {
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Container principal: grade + palavras */
+.game-container {
+    display: flex;
+    justify-content: center; /* centraliza o conjunto */
+    align-items: flex-start;
+    gap: 50px; /* espaço entre grade e lista */
+    flex-wrap: wrap;
+}
+
+/* Grade do caça-palavras */
+.wordSearch {
+    display: inline-block;
+    user-select: none;
+}
+
+.wordSearch table {
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.wordSearch td {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #bbb;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.highlight {
+    background-color: #a8e6a2;
+}
+
+.found {
+    background-color: #a8e6a2 !important;
+    color: #cf6e2c;
+}
+
+/* Lista de palavras à direita */
+.words {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    max-width: 500px; /* largura controlada */
+}
+
+/* Palavras */
+.word {
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #555;
+}
+
+.found-word {
+    text-decoration: line-through;
+    color: #cf6e2c;
+}
+
+/* Progresso */
+#progress {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #444;
+    margin: 0;
+}
+
+/* Botão próximo */
+#btnProximoJogo {
+    display: none !important;
+}
+
+
+/* ============================
+   ESTILO DO IFRAME (MEMORY GAME)
+===============================*/
+
+.iframe-container {
+  position: fixed; /* cobre toda a tela */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* fundo translúcido */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#iframe-container.hidden {
+  display: none;
+}
+
+#memoryFrame {
+  width: 90vw;
+  height: 90vh;
+  border: none;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+}

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Game - TCC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/script.js" defer></script>
+    <script src="js/game7errors.js" defer></script>
+    <script src="js/wordsearch.js" defer></script>
+    <script src="js/memorygame.js" defer></script>
+    <link rel="stylesheet" href="styles/styleMemoryGame.css" />
+
+</head>
+<body>
+
+    <!-- Imagem de fundo - Tela inicial -->
+    <img src="images/home_screen.png" alt="Tela inicial" class="bg-image" id="fundo">
+
+    <!-- Botões do menu principal -->
+    <div class="menu-buttons">
+        <input type="button" value="COMEÇAR" class="menu-btn" id="btn-comecar" onclick="proximaImagem()">
+        <input type="button" value="SOBRE O JOGO" class="menu-btn" id="btn-sobre" onclick="mostrarSobre()">
+        <input type="button" value="DESENVOLVEDORA" class="menu-btn" id="btn-dev" onclick="mostrarDesenvolvedora()">
+    </div>
+
+    <!-- Imagem Sobre o Jogo -->
+    <div id="sobreJogo" class="overlay">
+        <span class="close-btn" onclick="fecharSobre()">X</span>
+        <img src="images/sobreojogo.png" alt="Sobre o Jogo" class="overlay-image">
+    </div>
+
+    <!-- Imagem Sobre a Desenvolvedora -->
+    <div id="sobreDev" class="overlay">
+        <span class="close-btn" onclick="fecharDesenvolvedora()">X</span>
+        <img src="images/sobreadev.png" alt="Sobre a Desenvolvedora" class="overlay-image">
+    </div>
+    
+    <!-- Botão de avanço entre telas narrativas -->
+    <input type="button" value="PRÓXIMO" class="next-btn right" id="botao" onclick="proximaImagem()" style="display:none;">
+
+    <!-- Balão da segunda tela -->
+    <div id="balloon_screen2" class="baloon"></div>
+
+    <!-- Balão da terceira tela -->
+    <div id="balloon_screen3" class="baloon"></div>
+
+    <!-- Tela de decisão antes do jogo dos 7 erros -->
+    <div id="tela_escolha" class="tela-escolha" style="display:none;">
+    <div class="caixa-escolha">
+        <p>Ajude o senhor Antônio a descobrir o que há de errado nessa imagem. <br> Você deseja jogar o minigame dos 7 erros ou seguir para a próxima parte da história?</p>
+        
+        <div class="botoes-escolha">
+        <input type="button" value="JOGAR" class="next-btn left" onclick="iniciar7erros()">
+        <input type="button" value="PULAR" class="next-btn right" onclick="pularJogo()">
+        </div>
+    </div>
+    </div>
+
+    <!-- Jogo dos 7 erros -->
+    <div id="game7errors" class="game7errors" style="display: none;">
+        <div class="texto-topo"> 
+            <h1>JOGO DOS 7 ERROS</h1>
+            <p>Marque as diferenças encontradas na imagem à direita</p>
+        </div>
+        <div id="canvas-main" class="canvas">
+            <img src="images/family1.png" class="game-image left" />
+            <img src="images/family2.png" class="game-image right" />
+            <div class="cursor"></div>
+        </div>
+    </div>
+
+    <!-- Balão da sexta tela -->
+    <div id="balloon_screen4" class="baloon"></div>
+
+    <!-- Balão da sétima tela -->
+    <div id="balloon_screen5" class="baloon"></div>
+
+    <!-- Balão da oitava tela -->
+    <div id="balloon_screen6" class="baloon"></div>
+
+    <!-- Balão da décima primeira tela -->
+    <div id="balloon_screen7" class="baloon"></div>
+
+    <!-- Tela de escolha - CARTA OU MENSAGEM -->
+    <div id="tela_escolha_msg" class="tela-escolha">
+    <div class="caixa-escolha">
+        <p>Como você acha que o senhor Antônio deseja enviar o poema para Miguel?</p>
+
+        <div class="botoes-escolha">
+        <button id="botao_carta" class="next-btn">CARTA</button>
+        <button id="botao_mensagem" class="next-btn">MENSAGEM INSTANTÂNEA</button>
+        </div>
+    </div>
+    </div>
+
+    <!-- Balão da décima quarta tela -->
+    <div id="balloon_screen8" class="baloon"></div>
+
+    <!--  Balão da décima quinta tela -->
+    <div id="balloon_screen9" class="baloon"></div>
+
+    <!-- Tela de decisão antes do jogo Caça-Palavras -->
+    <div id="tela_escolha_cacapalavras" class="tela-escolha" style="display:none;">
+    <div class="caixa-escolha">
+        <p>Ajude o senhor Antônio a encontrar as melhores palavras para o poema. <br> Você deseja jogar o minigame de caça-palavras ou seguir para a próxima parte da história?</p>
+
+        <div class="botoes-escolha">
+        <input type="button" value="JOGAR" id="btnJogarCaca" class="next-btn left">
+        <input type="button" value="PULAR" id="btnPularCaca" class="next-btn right">
+        </div>
+    </div>
+    </div>
+
+    <!-- Jogo caça-palavras -->
+    <div id="jogoCacaPalavras" class="game7errors" style="display:none;">
+        <div class="game-wrapper">
+            <h1>CAÇA-PALAVRAS</h1>
+            <p id="progress"></p>
+
+            <div class="game-container">
+                <!-- Lista de palavras à esquerda -->
+                <div class="words" id="wordsList">
+                    <!-- As palavras são inseridas via JS -->
+                </div>
+
+                <!-- Grade do caça-palavras -->
+                <div class="wordSearch" id="wordSearch">
+                    <table id="puzzleGrid"></table>
+                </div>
+            </div>
+
+            <!-- Botão para seguir -->
+            <button class="next-btn right" id="btnProximoJogo" style="display:none;">Próximo</button>
+        </div>
+    </div>
+
+    <!-- Balão da décima sétima tela  -->
+    <div id="balloon_screen10" class="baloon"></div>
+
+    <!-- Balão da vigésima tela -->
+    <div id="balloon_screen11" class="baloon"></div>
+
+    <!-- Balão da vigésima segunda tela -->
+    <div id="balloon_screen12" class="baloon"></div>
+
+    <!-- Balão da vigésima quarta tela -->
+    <div id="balloon_screen13" class="baloon"></div>
+
+    <!-- Tela de decisão antes do jogo da Memória -->
+    <div id="tela_escolha_memory" class="tela-escolha" style="display:none;">
+        <div class="caixa-escolha">
+            <p> Ajude o senhor Antônio a encontrar o objeto que o faz lembrar do seu netinho.<br> Você deseja jogar o minigame de memória ou seguir para a próxima parte da história?</p>
+
+            <div class="botoes-escolha">
+                <input type="button" value="JOGAR" id="btnJogarMemory" class="next-btn left">
+                <input type="button" value="PULAR" id="btnPularMemory" class="next-btn right">
+            </div>
+        </div>
+    </div>   
+
+    <!-- Container que cobre a tela inteira com o iframe -->
+    <div id="memoryContainer" style="
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    ">
+        <iframe id="memoryFrame" src="indexMemoryGame.html" style="width: 100%; height: 100%; border: none; border-radius: 0;"></iframe>
+    </div>
+
+
+    <!-- Balão da vigésima sexta tela -->
+    <div id="balloon_screen14" class="baloon"></div>
+    
+    <!-- Balão da vigésima sétima tela -->
+    <div id="balloon_screen15" class="baloon"></div>
+    
+    <!-- Balão da vigésima nona tela -->
+    <div id="balloon_screen16" class="baloon"></div>
+    
+    <!-- Balão da trigésima primeira tela -->
+    <div id="balloon_screen17" class="baloon"></div>
+
+    <!-- Balão da trigésima terceira tela -->
+    <div id="balloon_screen18" class="baloon"></div>
+
+</body>
+</html>
+

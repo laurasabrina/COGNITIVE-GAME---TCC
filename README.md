@@ -6,7 +6,7 @@ O declínio cognitivo leve afeta milhões de idosos globalmente, reforçando a n
 - Ambiente de programação: VS Code (HTML, CSS e JavaScript);
 - Incorporação de elementos gráficos: Canva Pro;
 - Criação de imagens: Microsoft Bing;
-- Hospedagem: GitHub Pages (https://laurasabrina.github.io/COGNITIVE-GAME--TCC/).
+- Hospedagem: GitHub Pages (https://laurasabrina.github.io/COGNITIVE-GAME---TCC/).
 
 ## RECURSOS INCLUSOS
 - Narrativa acessível para estimulação de atenção, raciocínio e memória;
